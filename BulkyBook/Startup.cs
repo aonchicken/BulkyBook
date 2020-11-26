@@ -41,6 +41,22 @@ namespace BulkyBook
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = "3645193338892240";
+                options.AppSecret = "c52eabbc7bf4ee63eecffb3cac20a0ea";
+            });
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = "867591387680-92i4l4133dbdgsqmf020mjcda0nda8l7.apps.googleusercontent.com";
+                options.ClientSecret = "0NhZAv9XR4PtyShr_32N3WXr";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

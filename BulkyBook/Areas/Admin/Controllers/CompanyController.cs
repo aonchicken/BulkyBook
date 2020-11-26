@@ -5,11 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
+using BulkyBook.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace BulkyBook.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
     public class CompanyController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -69,7 +72,7 @@ namespace BulkyBook.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
             var allObj = _unitOfWork.Company.GetAll();
-            return Json(new {data = allObj});
+            return Json(new { data = allObj });
         }
 
         [HttpDelete]
@@ -78,11 +81,11 @@ namespace BulkyBook.Areas.Admin.Controllers
             var objFromDb = _unitOfWork.Company.Get(id);
             if (objFromDb == null)
             {
-                return Json(new {success = false, message = "Error while deleting"});
+                return Json(new { success = false, message = "Error while deleting" });
             }
             _unitOfWork.Company.Remove(objFromDb);
             _unitOfWork.Save();
-            return Json(new {success = true, message = "Delete Successful"});
+            return Json(new { success = true, message = "Delete Successful" });
         }
 
         #endregion
