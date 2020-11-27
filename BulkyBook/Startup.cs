@@ -38,6 +38,7 @@ namespace BulkyBook
             services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<EmailOptions>(Configuration.GetSection("SmtpSettings"));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
@@ -46,6 +47,8 @@ namespace BulkyBook
                 options.LoginPath = $"/Identity/Account/Login";
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromDays(5);
+                options.SlidingExpiration = true;
             });
             services.AddAuthentication().AddFacebook(options =>
             {
